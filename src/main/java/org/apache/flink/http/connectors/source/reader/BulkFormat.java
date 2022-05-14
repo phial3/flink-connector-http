@@ -4,9 +4,9 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.http.connectors.source.HttpSourceSplit;
-import org.apache.flink.http.connectors.source.HttpSourceParameters;
 import org.apache.flink.http.connectors.source.meta.CheckpointPosition;
 import org.apache.flink.http.connectors.source.meta.RecordsAndPosition;
+import org.apache.flink.http.connectors.source.params.HttpSourceParameters;
 
 import javax.annotation.Nullable;
 import java.io.Closeable;

@@ -2,6 +2,7 @@ package org.apache.flink.http.connectors.source;
 
 import org.apache.flink.api.connector.source.SourceSplit;
 import org.apache.flink.http.connectors.source.meta.CheckpointPosition;
+import org.apache.flink.http.connectors.source.params.HttpSourceParameters;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -14,8 +15,6 @@ public class HttpSourceSplit implements SourceSplit, Serializable {
     private static final long serialVersionUID = 6348086794567295161L;
 
     private final String id;
-    private final HttpSourceParameters parameters;
-
     @Nullable
     private CheckpointPosition position;
 
@@ -26,17 +25,16 @@ public class HttpSourceSplit implements SourceSplit, Serializable {
     @Nullable
     transient byte[] serializedFormCache;
 
-    public HttpSourceSplit(String id, HttpSourceParameters parameters) {
-        this(id, parameters, null);
+    public HttpSourceSplit(String id) {
+        this(id, null);
     }
 
-    public HttpSourceSplit(String id, HttpSourceParameters parameters, CheckpointPosition position) {
-        this(id, parameters, position, null);
+    public HttpSourceSplit(String id,  CheckpointPosition position) {
+        this(id,  position, null);
     }
 
-    public HttpSourceSplit(String id, HttpSourceParameters parameters, @Nullable CheckpointPosition position, @Nullable byte[] serializedFormCache) {
+    public HttpSourceSplit(String id, @Nullable CheckpointPosition position, @Nullable byte[] serializedFormCache) {
         this.id = id;
-        this.parameters = checkNotNull(parameters);
         this.position = position;
         this.serializedFormCache = serializedFormCache;
     }
@@ -46,15 +44,11 @@ public class HttpSourceSplit implements SourceSplit, Serializable {
         return id;
     }
 
-    public HttpSourceParameters getParameters() {
-        return parameters;
-    }
-
     public Optional<CheckpointPosition> getPosition() {
         return Optional.ofNullable(position);
     }
 
     public HttpSourceSplit updateWithCheckpointedPosition(CheckpointPosition position) {
-        return new HttpSourceSplit(id, parameters, position);
+        return new HttpSourceSplit(id, position);
     }
 }

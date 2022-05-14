@@ -39,8 +39,6 @@ public final class PendingSplitsCheckpointSerializer<T extends HttpSourceSplit>
 
     private static final int VERSION = 1;
 
-    private static final int VERSION_1_MAGIC_NUMBER = 0xDEADBEEF;
-
     private final SimpleVersionedSerializer<T> splitSerializer;
 
     public PendingSplitsCheckpointSerializer(SimpleVersionedSerializer<T> splitSerializer) {
@@ -81,7 +79,7 @@ public final class PendingSplitsCheckpointSerializer<T extends HttpSourceSplit>
 
         final byte[] result = new byte[totalLen];
         final ByteBuffer byteBuffer = ByteBuffer.wrap(result).order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putInt(VERSION_1_MAGIC_NUMBER);
+        byteBuffer.putInt(getVersion());
         byteBuffer.putInt(splitSerializer.getVersion());
         byteBuffer.putInt(serializedSplits.size());
 
@@ -112,12 +110,12 @@ public final class PendingSplitsCheckpointSerializer<T extends HttpSourceSplit>
         final ByteBuffer bb = ByteBuffer.wrap(serialized).order(ByteOrder.LITTLE_ENDIAN);
 
         final int magic = bb.getInt();
-        if (magic != VERSION_1_MAGIC_NUMBER) {
+        if (magic != getVersion()) {
             throw new IOException(
                     String.format(
                             "Invalid magic number for PendingSplitsCheckpoint. "
                                     + "Expected: %X , found %X",
-                            VERSION_1_MAGIC_NUMBER, magic));
+                            getVersion(), magic));
         }
 
         final int splitSerializerVersion = bb.getInt();

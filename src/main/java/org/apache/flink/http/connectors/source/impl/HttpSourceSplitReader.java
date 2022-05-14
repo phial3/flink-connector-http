@@ -7,9 +7,9 @@ import org.apache.flink.connector.base.source.reader.splitreader.SplitReader;
 import org.apache.flink.connector.base.source.reader.splitreader.SplitsAddition;
 import org.apache.flink.connector.base.source.reader.splitreader.SplitsChange;
 import org.apache.flink.http.connectors.source.HttpSourceSplit;
+import org.apache.flink.http.connectors.source.params.HttpSourceParameters;
 import org.apache.flink.http.connectors.source.reader.BulkFormat;
 import org.apache.flink.http.connectors.source.meta.CheckpointPosition;
-import org.apache.flink.http.connectors.source.HttpSourceParameters;
 import org.apache.flink.http.connectors.source.meta.RecordsAndPosition;
 
 import javax.annotation.Nullable;
@@ -23,6 +23,7 @@ public class HttpSourceSplitReader <T, SplitT extends HttpSourceSplit>
         implements SplitReader<RecordsAndPosition<T>, SplitT> {
 
     private final Configuration config;
+    private final HttpSourceParameters parameters;
     private final BulkFormat<T, SplitT> readerFactory;
 
     private final Queue<SplitT> splits;
@@ -32,8 +33,9 @@ public class HttpSourceSplitReader <T, SplitT extends HttpSourceSplit>
     @Nullable
     private String currentSplitId;
 
-    public HttpSourceSplitReader(Configuration config, BulkFormat<T, SplitT> readerFactory) {
+    public HttpSourceSplitReader(Configuration config,HttpSourceParameters parameters, BulkFormat<T, SplitT> readerFactory) {
         this.config = config;
+        this.parameters = parameters;
         this.readerFactory = readerFactory;
         this.splits = new ArrayDeque<>();
     }
@@ -84,8 +86,6 @@ public class HttpSourceSplitReader <T, SplitT extends HttpSourceSplit>
         }
 
         currentSplitId = nextSplit.splitId();
-
-        final HttpSourceParameters parameters = nextSplit.getParameters();
 
         final Optional<CheckpointPosition> position = nextSplit.getPosition();
         currentReader =

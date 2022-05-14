@@ -25,6 +25,7 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.base.source.reader.SingleThreadMultiplexSourceReaderBase;
 import org.apache.flink.http.connectors.source.HttpSourceSplit;
 import org.apache.flink.http.connectors.source.HttpSourceSplitState;
+import org.apache.flink.http.connectors.source.params.HttpSourceParameters;
 import org.apache.flink.http.connectors.source.reader.BulkFormat;
 import org.apache.flink.http.connectors.source.meta.RecordsAndPosition;
 
@@ -40,9 +41,10 @@ public final class HttpSourceReader<T, SplitT extends HttpSourceSplit>
     public HttpSourceReader(
             SourceReaderContext readerContext,
             BulkFormat<T, SplitT> readerFormat,
+            HttpSourceParameters parameters,
             Configuration config) {
         super(
-                () -> new HttpSourceSplitReader<>(config, readerFormat),
+                () -> new HttpSourceSplitReader<>(config, parameters, readerFormat),
                 new HttpSourceRecordEmitter<>(),
                 config,
                 readerContext);

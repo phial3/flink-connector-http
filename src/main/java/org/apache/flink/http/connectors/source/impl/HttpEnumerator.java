@@ -7,7 +7,7 @@ import org.apache.flink.http.connectors.source.HttpSourceSplit;
 import org.apache.flink.http.connectors.source.PendingSplitsCheckpoint;
 import org.apache.flink.http.connectors.source.assigners.HttpSourceSplitAssigner;
 import org.apache.flink.http.connectors.source.enumerator.HttpSourceSplitEnumerator;
-import org.apache.flink.http.connectors.source.HttpSourceParameters;
+import org.apache.flink.http.connectors.source.params.HttpSourceParameters;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
